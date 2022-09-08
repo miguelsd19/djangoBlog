@@ -3,7 +3,8 @@ from urllib import response
 from rest_framework.views import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from users.api.serializer import UserRegisterSerializer
+from rest_framework.permissions import IsAuthenticated
+from users.api.serializer import UserRegisterSerializer, UserSerializer
 from users.models import User
 
 
@@ -16,3 +17,11 @@ class RegisterView(APIView):
             return Response(serializer.data)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+        
